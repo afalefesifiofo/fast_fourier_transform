@@ -140,17 +140,55 @@ public class FFT_1D {
 	//tab1 et tab2, sont les coefficients de ces polynômes
 	// CpxTab sera le tableau des coefficients du polynôme produit (purement réel)
 	public static CpxTab multiplication_polynome_viaFFT(double[] tab1, double[] tab2) {
+		// Calcolare la dimensione del polinomio prodotto (somma delle dimensioni dei due polinomi - 1)
+		int size = tab1.length + tab2.length - 1;
 		
-		//on commence par doubler la taille des vecteurs en rajoutant des zéros à la fin (cf TD)
-		double[] t1 = new double[2*tab1.length], t2 = new double[2*tab1.length];
-		for (int i = 0; i < tab1.length; i++) {
-			t1[i] = tab1[i];
-			t2[i] = tab2[i];
+		// Determina la dimensione successiva che è una potenza di 2
+		int newSize = 1;
+		while (newSize < size) {
+			newSize *= 2;  // Trova la potenza di 2 successiva
 		}
-
-		//A COMPLETER !!
-		return null;
+	
+		// Creiamo array zero-padded per entrambi i polinomi
+		double[] t1 = new double[newSize];
+		double[] t2 = new double[newSize];
+		
+		System.arraycopy(tab1, 0, t1, 0, tab1.length);  // Copia i coefficienti di A(X)
+		System.arraycopy(tab2, 0, t2, 0, tab2.length);  // Copia i coefficienti di B(X)
+		
+		// Applicare la FFT a entrambi i polinomi zero-padded
+		CpxTab fftT1 = FFT(t1);
+		CpxTab fftT2 = FFT(t2);
+		
+		// Moltiplicare punto per punto le trasformate di Fourier
+		CpxTab fftResult = new CpxTab(newSize);
+		for (int i = 0; i < newSize; i++) {
+			double real = fftT1.get_p_reel(i) * fftT2.get_p_reel(i) - fftT1.get_p_imag(i) * fftT2.get_p_imag(i);
+			double imag = fftT1.get_p_reel(i) * fftT2.get_p_imag(i) + fftT1.get_p_imag(i) * fftT2.get_p_reel(i);
+			
+			fftResult.set_p_reel(i, real);
+			fftResult.set_p_imag(i, imag);
+		}
+		
+		// Applicare la FFT inversa sul risultato della moltiplicazione
+		CpxTab product = FFT_inverse(fftResult);
+		
+		// Creare un nuovo array per memorizzare i coefficienti finali
+		CpxTab finalResult = new CpxTab(size);
+		
+		// Normalizzare il risultato e estrarre i primi (size) coefficienti
+		for (int i = 0; i < size; i++) {
+			finalResult.set_p_reel(i, product.get_p_reel(i) / newSize);  // Normalizzazione
+			finalResult.set_p_imag(i, product.get_p_imag(i) / newSize);
+		}
+		
+		return finalResult;
 	}
+	
+	
+	
+	
+	
 
 	
 	//renvoie un tableau de réels aléatoires
@@ -235,12 +273,34 @@ public class FFT_1D {
 
 		/* Exo 4: multiplication polynomiale, vérification*/
 			/* A(X) = 2 et B(X)=-3 */
-			//A FAIRE		
+			double[] A = {2};  // Polynomial A(X) = 2
+    double[] B = {-3}; // Polynomial B(X) = -3
+    
+    // Call the multiplication function
+    CpxTab result_mult = multiplication_polynome_viaFFT(A, B);
+    
+    // Output the result (coefficients of the product polynomial)
+    System.out.println(result_mult.toString());	
 
 			/* A(X) = 2+X et B(X)= -3+2X */
-			//A FAIRE					
+			double[] A2 = {2,1};  
+			double[] B2 = {-3,2}; 
+			
+			// Call the multiplication function
+			CpxTab result_mult2 = multiplication_polynome_viaFFT(A2, B2);
+			
+			// Output the result (coefficients of the product polynomial)
+			System.out.println(result_mult2.toString());						
 
 			/* A(X) = 1 + 2X + 3X^2 + 4X^3 et B(X) = -3 + 2X - 5 X^2*/
+			double[] A3 = {1,2,3};
+			double[] B3 = {-3,3,-5};
+			
+			// Call the multiplication function
+			CpxTab result_mult3 = multiplication_polynome_viaFFT(A3, B3);
+			
+			// Output the result (coefficients of the product polynomial)
+			System.out.println(result_mult3.toString());
 	/*
 		System.out.println("-----------------------------------------------------");
 		System.out.println("   Comparaison des 2 méthodes de multiplications polynomiales");
