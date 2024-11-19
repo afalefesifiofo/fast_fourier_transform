@@ -100,9 +100,41 @@ public class FFT_1D {
 			
 	//renvoie la transformée de Fourier inverse de y
 	public static CpxTab FFT_inverse(CpxTab y) {
-		//A FAIRE
-		return null;
+		int n = y.taille();
+		
+		// Step 1: Conjugate the input (y)
+		CpxTab y_conjugate = new CpxTab(n);
+		for (int i = 0; i < n; i++) {
+			double re = y.get_p_reel(i);
+			double im = y.get_p_imag(i);
+			y_conjugate.set_p_reel(i, re);
+			y_conjugate.set_p_imag(i, -im);  // Conjugate the imaginary part
+		}
+		
+		// Step 2: Apply FFT to the conjugated input
+		CpxTab fft_result = FFT(y_conjugate);
+		
+		// Step 3: Conjugate the result of the FFT
+		CpxTab fft_inverse = new CpxTab(n);
+		for (int i = 0; i < n; i++) {
+			double re = fft_result.get_p_reel(i);
+			double im = fft_result.get_p_imag(i);
+			fft_inverse.set_p_reel(i, re);
+			fft_inverse.set_p_imag(i, -im);  // Conjugate the imaginary part
+		}
+		
+		// Step 4: Scale the result by 1/n
+		for (int i = 0; i < n; i++) {
+			double re = fft_inverse.get_p_reel(i) / n;
+			double im = fft_inverse.get_p_imag(i) / n;
+			fft_inverse.set_p_reel(i, re);
+			fft_inverse.set_p_imag(i, im);
+		}
+		
+		// Return the inverse FFT result
+		return fft_inverse;
 	}
+	
 	
 	//calcule le produit de deux polynômes en utilisant la FFT
 	//tab1 et tab2, sont les coefficients de ces polynômes
@@ -198,7 +230,8 @@ public class FFT_1D {
 		System.out.println(result_fft);
 		
 		/* Exo 3: calculez et affichez TFD_inverse(TFD(1,2,3,4)) */
-			//A FAIRE		
+		CpxTab fft_inverse_result = FFT_1D.FFT_inverse(FFT_1D.FFT(x));		
+		System.out.println(fft_inverse_result);
 
 		/* Exo 4: multiplication polynomiale, vérification*/
 			/* A(X) = 2 et B(X)=-3 */
