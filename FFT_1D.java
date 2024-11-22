@@ -244,11 +244,11 @@ public class FFT_1D {
 		 CpxTab c1 = new CpxTab(even); // TFD dei pari
 		 CpxTab c2 = new CpxTab(odd);  // TFD dei dispari
  
-		 // Calcolo della TFD combinata
+		 // Calculation TFD combinata
 		 CpxTab result = FFT_1D.combine(c1, c2);
  
-		 // Stampiamo il risultato
-		 System.out.println("Risultato TFD combinata: " + result);
+		 // result
+		 System.out.println("Result TFD combined: " + result);
  
 
 		/* Exo 2: calculez et affichez TFD(1,2,3,4) */
@@ -301,19 +301,19 @@ public class FFT_1D {
 			
 			// Output the result (coefficients of the product polynomial)
 			System.out.println(result_mult3.toString());
-	/*
+	
 		System.out.println("-----------------------------------------------------");
 		System.out.println("   Comparaison des 2 méthodes de multiplications polynomiales");
 		double[] t6 = {-3,2,-5,0};
 		System.out.println("mult via FFT  --> " + multiplication_polynome_viaFFT(t5, t6));
 		System.out.print(  "mult via coeff -> ");
 		afficher(multiplication_polynome_viaCoeff(t5, t6));
-	*/
+	
 
 		/* Exo 5: comparaison des temps de calculs */
-	/*
+	
 		// Pour étude du temps de calcul 
-		int n = 256;  // taille des polynômes à multiplier (testez différentes valeurs en gardant des puissances de 2)
+		int n = 2048;  // taille des polynômes à multiplier (testez différentes valeurs en gardant des puissances de 2)
 			
 		System.out.println("Temps de calcul pour n="+n);
 		double[] tab1 =random(n),tab2 = random(n);
@@ -327,7 +327,7 @@ public class FFT_1D {
 		multiplication_polynome_viaFFT(tab1, tab2);
 		date2 = System.currentTimeMillis();
 		System.out.println("   via FFT  : " + (date2 - date1));
-	*/
+	
 
 	}
 
