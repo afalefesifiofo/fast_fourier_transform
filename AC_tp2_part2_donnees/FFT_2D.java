@@ -75,13 +75,19 @@ public class FFT_2D {
 
 			tigre_after_FFT_inverse_bp.write("tigre_after_fft_inverse.pgm");
 
-			
+			// image compression
+			System.out.println("Image compression\n");
 
-			
-			
-			//Exemple, �criture
-			//BP = I.convert_to_BytePixmap();
-			//BP.write("nomfichier2.pgm");
+			int n = tigrefft.taille();
+
+			tigrefft.set_p_reel(n/2, n/2, 0);
+			tigrefft.set_p_imag(n/2, n/2, 0); 
+
+			CpxImg tigre_after_FFT_inverse2 = FFT_inverse(tigrefft);
+			BytePixmap tigre_after_FFT_inverse_bp2 = tigre_after_FFT_inverse2.convert_to_BytePixmap();
+
+			tigre_after_FFT_inverse_bp2.write("tigre_after_fft_inverse_compressed.pgm");
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
