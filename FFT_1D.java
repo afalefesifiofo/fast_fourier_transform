@@ -230,6 +230,19 @@ public class FFT_1D {
 		}
 		System.out.println("]");
 	}
+
+	// Genearate sinusoid
+	public static CpxTab generateSinusoid(int n, int k) {
+		CpxTab sinusoid = new CpxTab(n); // CpxTab è il tuo contenitore per numeri complessi
+	
+		for (int i = 0; i < n; i++) {
+			double realPart = Math.cos(2 * Math.PI * k * i / n); // Calcolo della sinusoide
+			sinusoid.set_p_reel(i, realPart); // Imposta la parte reale (coseno)
+			sinusoid.set_p_imag(i, 0);       // La parte immaginaria è 0
+		}
+	
+		return sinusoid;
+	}
 	
 	public static void main(String[] args) {
 		double[] t5 = {1,2,3,4};
@@ -261,6 +274,7 @@ public class FFT_1D {
 		x.set_p_imag(2, 0.0);  // Imaginary part of x[2]
 		x.set_p_reel(3, 4.0);  // Real part of x[3]
 		x.set_p_imag(3, 0.0);  // Imaginary part of x[3]
+
 	
 		// Apply the FFT
 		CpxTab result_fft = FFT_1D.FFT(x);
@@ -328,6 +342,27 @@ public class FFT_1D {
 		date2 = System.currentTimeMillis();
 		System.out.println("   via FFT  : " + (date2 - date1));
 	
+		//PART 2 es1 already in part 1
+
+		// es2
+
+		CpxTab sinusoid = generateSinusoid(16, 10);
+
+		CpxTab fftResult = FFT(sinusoid);
+
+    // Stampa i risultati
+    System.out.println("Result of FFT on sinusoid:");
+    for (int i = 0; i < fftResult.taille(); i++) {
+        double real = fftResult.get_p_reel(i);
+        double imag = fftResult.get_p_imag(i);
+        System.out.printf("F[%d] = %.3f + %.3fi\n", i, real, imag);
+    }
+		
+		
+
+		
+
+
 
 	}
 
