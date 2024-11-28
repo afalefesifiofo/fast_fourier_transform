@@ -328,7 +328,61 @@ public class FFT_1D {
 		date2 = System.currentTimeMillis();
 		System.out.println("   via FFT  : " + (date2 - date1));
 	
-
+		testVecteurConstant(10, 25);
+		testSinusoidePure(14, 20);
+		testSommeSinusoides(5);
+		testSignalMixte(5);
 	}
+	public static void testVecteurConstant(double valeur, int n) {
+		// Initialisation du vecteur constant
+		double[] constant = new double[n];
+		for (int i = 0; i < n; i++) {
+			constant[i] = valeur;
+		}
+	
+		// Calcul de la TFD
+		CpxTab result = FFT_1D.FFT(constant);
+	
+		// Affichage
+		System.out.println("TFD du vecteur constant (" + valeur + "): " + result);
+	}
+	public static void testSinusoidePure(int k, int n) {
+		// Initialisation du vecteur sinusoïde pure
+		double[] sinusoide = new double[n];
+		for (int t = 0; t < n; t++) {
+			sinusoide[t] = Math.cos(2 * Math.PI * k * t / n);
+		}
+	
+		// Calcul de la TFD
+		CpxTab result = FFT_1D.FFT(sinusoide);
+	
+		// Affichage
+		System.out.println("TFD de la sinusoïde pure (k=" + k + "): " + result);
+	}
+	public static void testSommeSinusoides(int n) {
+		// Initialisation du vecteur somme de deux sinusoïdes
+		double[] sommeSinusoides = new double[n];
+		for (int t = 0; t < n; t++) {
+			sommeSinusoides[t] = Math.cos(2 * Math.PI * t / n) + 0.5 * Math.cos(2 * Math.PI * 3 * t / n);
+		}
+	
+		// Calcul de la TFD
+		CpxTab result = FFT_1D.FFT(sommeSinusoides);
+	
+		// Affichage
+		System.out.println("TFD de la somme de deux sinusoïdes: " + result);
+	}
+	public static void testSignalMixte(int n) {
+		// Initialisation du signal mixte
+		double[] signalMixte = new double[n];
+		for (int t = 0; t < n; t++) {
+			signalMixte[t] = 4 + 2 * Math.sin(2 * Math.PI * 2 * t / n) + Math.cos(2 * Math.PI * 7 * t / n);
+		}
+		// Calcul de la TFD
+		CpxTab result = FFT_1D.FFT(signalMixte);
+		// Affichage
+		System.out.println("TFD du signal mixte: " + result);
+	}
+	
 
 }
