@@ -82,24 +82,24 @@ public class FFT_1D {
 		// Calcolare la dimensione del polinomio prodotto (somma delle dimensioni dei due polinomi - 1)
 		int size = tab1.length + tab2.length - 1;
 		
-		// Determina la dimensione successiva che è una potenza di 2
+		
 		int newSize = 1;
 		while (newSize < size) {
-			newSize *= 2;  // Trova la potenza di 2 successiva
+			newSize *= 2;  // find the next power of 2
 		}
 	
-		// Creiamo array zero-padded per entrambi i polinomi
+		// create array zero-padded for both polynomes
 		double[] t1 = new double[newSize];
 		double[] t2 = new double[newSize];
 		
-		System.arraycopy(tab1, 0, t1, 0, tab1.length);  // Copia i coefficienti di A(X)
-		System.arraycopy(tab2, 0, t2, 0, tab2.length);  // Copia i coefficienti di B(X)
+		System.arraycopy(tab1, 0, t1, 0, tab1.length);  // Copy coefficients  A(X)
+		System.arraycopy(tab2, 0, t2, 0, tab2.length);  // Copy coefficients B(X)
 		
-		// Applicare la FFT a entrambi i polinomi zero-padded
+		// Apply FFT
 		CpxTab fftT1 = FFT(t1);
 		CpxTab fftT2 = FFT(t2);
 		
-		// Moltiplicare punto per punto le trasformate di Fourier
+		// Multiply point a point
 		CpxTab fftResult = new CpxTab(newSize);
 		for (int i = 0; i < newSize; i++) {
 			double real = fftT1.get_p_reel(i) * fftT2.get_p_reel(i) - fftT1.get_p_imag(i) * fftT2.get_p_imag(i);
@@ -109,15 +109,15 @@ public class FFT_1D {
 			fftResult.set_p_imag(i, imag);
 		}
 		
-		// Applicare la FFT inversa sul risultato della moltiplicazione
+		// apply fft inverse to the result
 		CpxTab product = FFT_inverse(fftResult);
 		
-		// Creare un nuovo array per memorizzare i coefficienti finali
+		// create new array for coefficients
 		CpxTab finalResult = new CpxTab(size);
 		
-		// Normalizzare il risultato e estrarre i primi (size) coefficienti
+		// Normalize the result and extract the first (size) coefficients
 		for (int i = 0; i < size; i++) {
-			finalResult.set_p_reel(i, product.get_p_reel(i) / newSize);  // Normalizzazione
+			finalResult.set_p_reel(i, product.get_p_reel(i) / newSize);  
 			finalResult.set_p_imag(i, product.get_p_imag(i) / newSize);
 		}
 		
