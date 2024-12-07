@@ -1,93 +1,44 @@
 /**** on va ici implémenter la transformée de Fourier rapide 1D ****/
 
 public class FFT_1D {
-	
-	//"combine" c1 et c2 selon la formule vue en TD
-	// c1 et c2 sont de même taille
-	// la taille du résultat est le double de la taille de c1
 	public static CpxTab combine(CpxTab c1, CpxTab c2) {
 		assert (c1.taille() == c2.taille()) : 
 			"combine: c1 et c2 ne sont pas de même taille, taille c1=" + c1.taille() + " taille c2=" + c2.taille();
-	
 		int n = 2 * c1.taille();  // La taille du résultat est deux fois celle de c1 (et c2)
 		CpxTab resultat = new CpxTab(n);  // Le tableau pour stocker le résultat
-	
 		double pi2 = 2 * Math.PI / n;  // Calcul de 2π/n
-	
 		for (int k = 0; k < c1.taille(); k++) {
-			// Calcul de ω_n^k = cos(2πk/n) + i*sin(2πk/n)
-			double cos = Math.cos(pi2 * k);
-			double sin = Math.sin(pi2 * k);
-	
-			// Extraction des parties réelle et imaginaire de c1[k] et c2[k]
-			double c1Re = c1.get_p_reel(k);
-			double c1Im = c1.get_p_imag(k);
-			double c2Re = c2.get_p_reel(k);
-			double c2Im = c2.get_p_imag(k);
-	
-			// Calcul de ω_n^k * c2[k]
-			double omegaC2Re = c2Re * cos - c2Im * sin;
-			double omegaC2Im = c2Re * sin + c2Im * cos;
-	
-			// Calcul de A(ω_k^n) = c1[k] + ω_n^k * c2[k]
-			double resRe1 = c1Re + omegaC2Re;
-			double resIm1 = c1Im + omegaC2Im;
-	
-			// Calcul de A(ω_k+n/2^n) = c1[k] - ω_n^k * c2[k]
-			double resRe2 = c1Re - omegaC2Re;
-			double resIm2 = c1Im - omegaC2Im;
-	
-			// Enregistrement des résultats dans le tableau de sortie
-			resultat.set_p_reel(k, resRe1);
-			resultat.set_p_imag(k, resIm1);
-			resultat.set_p_reel(k + c1.taille(), resRe2);
-			resultat.set_p_imag(k + c1.taille(), resIm2);
+			double cos = Math.cos(pi2 * k); double sin = Math.sin(pi2 * k);
+			double c1Re = c1.get_p_reel(k); double c1Im = c1.get_p_imag(k);
+			double c2Re = c2.get_p_reel(k); double c2Im = c2.get_p_imag(k);
+			double omegaC2Re = c2Re * cos - c2Im * sin; double omegaC2Im = c2Re * sin + c2Im * cos;
+			double resRe1 = c1Re + omegaC2Re; double resIm1 = c1Im + omegaC2Im;
+			double resRe2 = c1Re - omegaC2Re; double resIm2 = c1Im - omegaC2Im;
+			resultat.set_p_reel(k, resRe1); resultat.set_p_imag(k, resIm1);
+			resultat.set_p_reel(k + c1.taille(), resRe2); resultat.set_p_imag(k + c1.taille(), resIm2);
 		}
-	
 		return resultat;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 
 	//renvoie la TFD d'un tableau de complexes
 	//la taille de x doit être une puissance de 2
 	public static CpxTab FFT(CpxTab x) {
 		int n = x.taille();  // Get the size of the input array x
-	
 		// Base case: If the size is 1, return the array as is
 		if (n == 1) {
 			return x;
 		}
-	
-		// Check that the size is a power of 2
 		assert (n % 2 == 0) : "FFT: The size of x must be a power of 2";
-	
-		// Create two new CpxTab arrays to store even and odd indexed elements
-		CpxTab even = new CpxTab(n / 2);  // Array for even-indexed elements
-		CpxTab odd = new CpxTab(n / 2);   // Array for odd-indexed elements
-	
-		// Populate the "even" and "odd" arrays
+		CpxTab even = new CpxTab(n / 2);  
+		CpxTab odd = new CpxTab(n / 2);   
 		for (int i = 0; i < n / 2; i++) {
-			// Fill the "even" array with elements at even indices
-			even.set_p_reel(i, x.get_p_reel(2 * i));  // Real part of even indexed elements
-			even.set_p_imag(i, x.get_p_imag(2 * i));  // Imaginary part of even indexed elements
-	
-			// Fill the "odd" array with elements at odd indices
-			odd.set_p_reel(i, x.get_p_reel(2 * i + 1)); // Real part of odd indexed elements
-			odd.set_p_imag(i, x.get_p_imag(2 * i + 1)); // Imaginary part of odd indexed elements
+			even.set_p_reel(i, x.get_p_reel(2 * i));  
+			even.set_p_imag(i, x.get_p_imag(2 * i));  
+			odd.set_p_reel(i, x.get_p_reel(2 * i + 1)); 
+			odd.set_p_imag(i, x.get_p_imag(2 * i + 1)); 
 		}
-	
-		// Recursively apply the FFT to the "even" and "odd" arrays
 		CpxTab evenFFT = FFT(even);
 		CpxTab oddFFT = FFT(odd);
-	
-		// Combine the results of the even and odd FFTs using the combine function
 		return combine(evenFFT, oddFFT);
 	}
 	
@@ -101,37 +52,25 @@ public class FFT_1D {
 	//renvoie la transformée de Fourier inverse de y
 	public static CpxTab FFT_inverse(CpxTab y) {
 		int n = y.taille();
-		
-		// Step 1: Conjugate the input (y)
 		CpxTab y_conjugate = new CpxTab(n);
 		for (int i = 0; i < n; i++) {
 			double re = y.get_p_reel(i);
 			double im = y.get_p_imag(i);
-			y_conjugate.set_p_reel(i, re);
-			y_conjugate.set_p_imag(i, -im);  // Conjugate the imaginary part
+			y_conjugate.set_p_reel(i, re); y_conjugate.set_p_imag(i, -im); 
 		}
-		
-		// Step 2: Apply FFT to the conjugated input
 		CpxTab fft_result = FFT(y_conjugate);
-		
-		// Step 3: Conjugate the result of the FFT
 		CpxTab fft_inverse = new CpxTab(n);
 		for (int i = 0; i < n; i++) {
 			double re = fft_result.get_p_reel(i);
 			double im = fft_result.get_p_imag(i);
-			fft_inverse.set_p_reel(i, re);
-			fft_inverse.set_p_imag(i, -im);  // Conjugate the imaginary part
+			fft_inverse.set_p_reel(i, re); fft_inverse.set_p_imag(i, -im);
 		}
-		
-		// Step 4: Scale the result by 1/n
 		for (int i = 0; i < n; i++) {
 			double re = fft_inverse.get_p_reel(i) / n;
 			double im = fft_inverse.get_p_imag(i) / n;
 			fft_inverse.set_p_reel(i, re);
 			fft_inverse.set_p_imag(i, im);
 		}
-		
-		// Return the inverse FFT result
 		return fft_inverse;
 	}
 	
