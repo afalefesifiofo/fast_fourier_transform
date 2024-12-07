@@ -233,12 +233,12 @@ public class FFT_1D {
 
 	// Genearate sinusoid
 	public static CpxTab generateSinusoid(int n, int k) {
-		CpxTab sinusoid = new CpxTab(n); // CpxTab è il tuo contenitore per numeri complessi
+		CpxTab sinusoid = new CpxTab(n); // CpxTab is the container of complex numbers
 	
 		for (int i = 0; i < n; i++) {
-			double realPart = Math.cos(2 * Math.PI * k * i / n); // Calcolo della sinusoide
-			sinusoid.set_p_reel(i, realPart); // Imposta la parte reale (coseno)
-			sinusoid.set_p_imag(i, 0);       // La parte immaginaria è 0
+			double realPart = Math.cos(2 * Math.PI * k * i / n); // calculation
+			sinusoid.set_p_reel(i, realPart); 
+			sinusoid.set_p_imag(i, 0);      
 		}
 	
 		return sinusoid;
@@ -247,15 +247,14 @@ public class FFT_1D {
 	public static void main(String[] args) {
 		double[] t5 = {1,2,3,4};
 
-		 // Coefficienti del polinomio: [1, 2, 3, 4]
 		 double[] realPart = {1, 2, 3, 4};
 		 CpxTab input = new CpxTab(realPart);
  
-		 // Dividiamo i coefficienti in pari e dispari
-		 double[] even = {1, 3}; // coefficienti pari
-		 double[] odd = {2, 4};  // coefficienti dispari
-		 CpxTab c1 = new CpxTab(even); // TFD dei pari
-		 CpxTab c2 = new CpxTab(odd);  // TFD dei dispari
+		 // we divide coefficients odd and even
+		 double[] even = {1, 3}; 
+		 double[] odd = {2, 4};  
+		 CpxTab c1 = new CpxTab(even); 
+		 CpxTab c2 = new CpxTab(odd);  
  
 		 // Calculation TFD combinata
 		 CpxTab result = FFT_1D.combine(c1, c2);
