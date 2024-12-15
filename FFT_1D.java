@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+
 /**** on va ici implémenter la transformée de Fourier rapide 1D ****/
 
 public class FFT_1D {
@@ -212,8 +217,41 @@ public class FFT_1D {
 		x.set_p_imag(2, 0.0);  // Imaginary part of x[2]
 		x.set_p_reel(3, 4.0);  // Real part of x[3]
 		x.set_p_imag(3, 0.0);  // Imaginary part of x[3]
+		int taille = 5000;
+		double[] tabfft1 = new double[taille];
+		double[]tabcoef1 =new double[taille];
+		double[] tabfft2 = new double[taille];
+		double[]tabcoef2 =new double[taille];
+		List<Integer> tailles = new ArrayList<Integer>();
+		List<Double> tempscoef = new ArrayList<Double>();
+		List<Double> tempsfft = new ArrayList<Double>();
+		//CpxTab test= multiplication_polynome_viaFFT(tabfft2,tabfft2);
+		// Boucle de préchauffage
+       for (int p =1 ; p<taille;p+=100){
+		    for (int i =100; i<=p;i++){
+				tabfft1[i] =(int)Math.random();
+				tabfft2[i]=(int)Math.random();
+				tabcoef1[i] =(int)Math.random();
+				tabcoef2[i]=(int)Math.random();
+			}
+			long date1 = System.currentTimeMillis(); //on lance le chrono
+			CpxTab multi_fft =  multiplication_polynome_viaFFT(tabfft1,tabfft2);
+			long date2 = System.currentTimeMillis(); //on arrête le chrono
+			double te1 = date2-date1;
 
-	
+			tempsfft.add(te1) ;
+			 date1 = System.currentTimeMillis(); //on lance le chrono
+			 double[] multi_coef =  multiplication_polynome_viaCoeff(tabcoef1,tabcoef2);
+			 date2 = System.currentTimeMillis(); //on arrête le chrono
+			 double te2 = date2-date1;
+			tempscoef.add(te2) ;
+			System.out.println("Le temps de calcul pour la taille n =  "+p+" :");
+			System.out.println("par coefficient: "+te2);
+			System.out.println("par FFt: "+te1);
+			tailles.add(p);
+	    }
+	   Graph g = new Graph(tailles,tempsfft,tempscoef);
+		g.display();
 		// Apply the FFT
 		CpxTab result_fft = FFT_1D.FFT(x);
 
@@ -253,7 +291,7 @@ public class FFT_1D {
 			
 			// Output the result (coefficients of the product polynomial)
 			System.out.println(result_mult3.toString());
-	
+	/*
 		System.out.println("-----------------------------------------------------");
 		System.out.println("   Comparaison des 2 méthodes de multiplications polynomiales");
 		double[] t6 = {-3,2,-5,0};
@@ -265,7 +303,7 @@ public class FFT_1D {
 		/* Exo 5: comparaison des temps de calculs */
 	
 		// Pour étude du temps de calcul 
-		int n = 2048;  // taille des polynômes à multiplier (testez différentes valeurs en gardant des puissances de 2)
+	/*	int n = 2048;  // taille des polynômes à multiplier (testez différentes valeurs en gardant des puissances de 2)
 			
 		System.out.println("Temps de calcul pour n="+n);
 		double[] tab1 =random(n),tab2 = random(n);
@@ -279,7 +317,7 @@ public class FFT_1D {
 		multiplication_polynome_viaFFT(tab1, tab2);
 		date2 = System.currentTimeMillis();
 		System.out.println("   via FFT  : " + (date2 - date1));
-	
+	*/
 
 		testVecteurConstant(10, 25);
 		testSinusoidePure(14, 20);
